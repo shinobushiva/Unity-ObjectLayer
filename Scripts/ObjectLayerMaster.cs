@@ -38,6 +38,7 @@ namespace ObjectLayer
 			//yield return new WaitForEndOfFrame ();
 
 			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath("LayerSettings"));
+
 			if (fi.Exists) {
 				dataSaveLoad.loadDataUI.Load (fi, typeof(SerializableDictionary<string, bool>));
 			}
