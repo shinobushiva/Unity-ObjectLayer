@@ -30,7 +30,7 @@ namespace ObjectLayer
 			entryMap = new Dictionary<string, ObjectLayerEntry> ();
 
 			dataSaveLoad = GameObject.FindObjectOfType<DataSaveLoadMaster> ();
-			dataSaveLoad.loadDataUI.dataLoadHandler += DataLoadCallback;
+			dataSaveLoad.dataLoadHandler += DataLoadCallback;
 
 		}
 
@@ -40,7 +40,7 @@ namespace ObjectLayer
 			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath("LayerSettings"));
 
 			if (fi.Exists) {
-				dataSaveLoad.loadDataUI.Load (fi, typeof(SerializableDictionary<string, bool>));
+				dataSaveLoad.Load (fi, typeof(SerializableDictionary<string, bool>));
 			}
 		}
 
