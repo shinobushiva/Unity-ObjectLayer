@@ -20,6 +20,9 @@ namespace ObjectLayer
 		private SerializableDictionary<string, bool> layerMap;
 
 		private Dictionary<string, ObjectLayerEntry> entryMap;
+		
+		public string folder = "ObjectLayer";
+		public string file = "LayerSettings";
 
 
 		// Use this for initialization
@@ -29,16 +32,16 @@ namespace ObjectLayer
 			layerMap = new SerializableDictionary<string, bool>();
 			entryMap = new Dictionary<string, ObjectLayerEntry> ();
 
-			dataSaveLoad = GameObject.FindObjectOfType<DataSaveLoadMaster> ();
 			dataSaveLoad.dataLoadHandler += DataLoadCallback;
 
 		}
 
+
 		void Start(){
-			//yield return new WaitForEndOfFrame ();
 
-			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath("LayerSettings"));
+			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath(file, folder));
 
+			print (dataSaveLoad.GetFilePath(folder, file));
 			if (fi.Exists) {
 				dataSaveLoad.Load (fi, typeof(SerializableDictionary<string, bool>));
 			}
@@ -74,9 +77,9 @@ namespace ObjectLayer
 			}
 			layerMap [layer] = v;
 
-			dataSaveLoad.saveDataUI.fileName.text = "LayerSettings";
+			dataSaveLoad.saveDataUI.fileName.text = file;
 			dataSaveLoad.saveDataUI.data = layerMap;
-			dataSaveLoad.saveDataUI.Approved (true);
+			dataSaveLoad.saveDataUI.Approved (true, folder);
 
 		}
 
