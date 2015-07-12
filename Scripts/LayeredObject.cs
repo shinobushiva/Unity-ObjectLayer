@@ -12,6 +12,8 @@ namespace ObjectLayer {
 
 		public bool visible = true;
 
+		public bool collision = true;
+
 		private int invisibleLayer;
 
 		void Awake(){
@@ -21,20 +23,29 @@ namespace ObjectLayer {
 
 		// Use this for initialization
 		void Start () {
+			if (!visible)
+				SetVisible (false);
+
 			master = FindObjectOfType<ObjectLayerMaster> ();
 			master.AddObject (this);
-			 
+
 		}
+
 
 		public void SetVisible(bool b){
 			visible = b;
+//			collision = b;
+			
+//			gameObject.transform.SetCollision(b);
 			if (b) {
+				gameObject.SetActive (b);
 				gameObject.transform.SetLayer(orgLayer);
 			} else {
 				if(gameObject.layer != invisibleLayer){
 					orgLayer = gameObject.layer;
 					gameObject.transform.SetLayer(invisibleLayer);
 				}
+				gameObject.SetActive (b);
 			}
 		}
 	}

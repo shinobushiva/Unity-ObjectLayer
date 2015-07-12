@@ -10,17 +10,11 @@ namespace ObjectLayer
 	public class ObjectLayerMaster : MonoBehaviour
 	{
 		SerializableDictionary<string, List<LayeredObject>> dict;
-
-
 		public DataSaveLoadMaster dataSaveLoad;
-
 		public RectTransform scrollContent;
 		public ObjectLayerEntry prefab;
-
 		private SerializableDictionary<string, bool> layerMap;
-
 		private Dictionary<string, ObjectLayerEntry> entryMap;
-		
 		public string folder = "ObjectLayer";
 		public string file = "LayerSettings";
 
@@ -28,49 +22,66 @@ namespace ObjectLayer
 		// Use this for initialization
 		void Awake ()
 		{
-			dict = new SerializableDictionary<string, List<LayeredObject>>();
-			layerMap = new SerializableDictionary<string, bool>();
+			dict = new SerializableDictionary<string, List<LayeredObject>> ();
+			layerMap = new SerializableDictionary<string, bool> ();
 			entryMap = new Dictionary<string, ObjectLayerEntry> ();
 
-			dataSaveLoad.dataLoadHandler += DataLoadCallback;
+			dataSaveLoad.AddHandler(DataLoadCallback, typeof(SerializableDictionary<string, bool>));
 
 		}
 
+		void Start ()
+		{
 
-		void Start(){
+			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath (file, folder));
 
-			FileInfo fi = new FileInfo (dataSaveLoad.GetFilePath(file, folder));
-
-			print (dataSaveLoad.GetFilePath(folder, file));
+			print (dataSaveLoad.GetFilePath (folder, file));
 			if (fi.Exists) {
 				dataSaveLoad.Load (fi, typeof(SerializableDictionary<string, bool>));
 			}
 		}
 
-		public void AddObject(LayeredObject lo){
+		public void AddObject (LayeredObject lo)
+		{
 			string name = lo.layerName;
 			if (!dict.ContainsKey (name)) {
-				dict.Add(name, new List<LayeredObject>());
+				dict.Add (name, new List<LayeredObject> ());
 
-				ObjectLayerEntry cde = GameObject.Instantiate(prefab) as ObjectLayerEntry;
-				cde.transform.SetParent(scrollContent.transform, false);
-				cde.Set(name, this);
+				ObjectLayerEntry cde = GameObject.Instantiate (prefab) as ObjectLayerEntry;
+				cde.transform.SetParent (scrollContent.transform, false);
+				cde.Set (name, this);
+				cde.toggle.isOn = lo.visible;
 
-				entryMap.Add (name, cde);
-
-				layerMap.Add (name, true);
+				if(entryMap.ContainsKey(name)){
+					entryMap[name] = cde;
+				}else{
+					entryMap.Add (name, cde);
+				}
+				
+				if(layerMap.ContainsKey(name)){
+					layerMap[name] = lo.visible;
+				}else{
+					layerMap.Add (name, lo.visible);
+				}
 			}
-			dict[name].Add(lo);
+			dict [name].Add (lo);
 		}
 
-		public void SetLayerVisible(string layer){
+		public void SetLayerVisible (string layer)
+		{
 			SetLayerVisible (true, layer);
 		}
-		public void SetLayerInVisible(string layer){
+
+		public void SetLayerInVisible (string layer)
+		{
 			SetLayerVisible (false, layer);
 		}
 
-		public void SetLayerVisible(bool v, string layer){
+		public void SetLayerVisible (bool v, string layer)
+		{
+			if (!dict.ContainsKey (layer)) {
+				return;
+			}
 			List<LayeredObject> los = dict [layer]; 
 			foreach (LayeredObject lo in los) {
 				lo.SetVisible (v);
@@ -83,13 +94,12 @@ namespace ObjectLayer
 
 		}
 
-
 		public void DataLoadCallback (object o)
 		{
 			SerializableDictionary<string, bool> data = o as SerializableDictionary<string, bool>;
 			foreach (string key in data.Keys) {
-				SetLayerVisible(data[key], key);
-				entryMap [key].toggle.isOn = data[key];
+				SetLayerVisible (data [key], key);
+				entryMap [key].toggle.isOn = data [key];
 
 			}
 		}
