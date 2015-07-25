@@ -37,6 +37,7 @@ namespace ObjectLayer {
 //			collision = b;
 			
 //			gameObject.transform.SetCollision(b);
+
 			if (b) {
 				gameObject.SetActive (b);
 				gameObject.transform.SetLayer(orgLayer);
@@ -47,6 +48,10 @@ namespace ObjectLayer {
 				}
 				gameObject.SetActive (b);
 			}
+		}
+
+		void OnDestroy(){
+			master.RemoveObject (this);
 		}
 	}
 }

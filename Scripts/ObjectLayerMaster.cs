@@ -67,6 +67,13 @@ namespace ObjectLayer
 			dict [name].Add (lo);
 		}
 
+		public void RemoveObject(LayeredObject lo){
+			string name = lo.layerName;
+			if (dict.ContainsKey (name)) {
+				dict[name].Remove(lo);
+			}
+		}
+
 		public void SetLayerVisible (string layer)
 		{
 			SetLayerVisible (true, layer);
@@ -82,15 +89,19 @@ namespace ObjectLayer
 			if (!dict.ContainsKey (layer)) {
 				return;
 			}
+
 			List<LayeredObject> los = dict [layer]; 
 			foreach (LayeredObject lo in los) {
-				lo.SetVisible (v);
+				if(lo != null && lo.gameObject != null){
+					lo.SetVisible (v);
+				}
 			}
 			layerMap [layer] = v;
 
-			dataSaveLoad.saveDataUI.fileName.text = file;
-			dataSaveLoad.saveDataUI.data = layerMap;
-			dataSaveLoad.saveDataUI.Approved (true, folder);
+//			dataSaveLoad.saveDataUI.fileName.text = file;
+//			dataSaveLoad.saveDataUI.data = layerMap;
+//			dataSaveLoad.saveDataUI.Approved (true, folder);
+			dataSaveLoad.Save (file, folder, layerMap);
 
 		}
 
