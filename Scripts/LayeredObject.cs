@@ -17,26 +17,18 @@ namespace ObjectLayer {
 		private int invisibleLayer;
 
 		void Awake(){
-//			orgLayer = gameObject.layer;
 			invisibleLayer = LayerMask.NameToLayer ("Invisible");
-		}
-
-		// Use this for initialization
-		void Start () {
+		
 			if (!visible)
 				SetVisible (false);
 
 			master = FindObjectOfType<ObjectLayerMaster> ();
 			master.AddObject (this);
-
 		}
 
 
 		public void SetVisible(bool b){
 			visible = b;
-//			collision = b;
-			
-//			gameObject.transform.SetCollision(b);
 
 			if (b) {
 				gameObject.SetActive (b);

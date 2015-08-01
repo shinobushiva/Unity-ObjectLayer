@@ -9,12 +9,12 @@ namespace ObjectLayer
 {
 	public class ObjectLayerMaster : MonoBehaviour
 	{
-		SerializableDictionary<string, List<LayeredObject>> dict;
+		SerializableDictionary<string, List<LayeredObject>> dict = new SerializableDictionary<string, List<LayeredObject>> ();
 		public DataSaveLoadMaster dataSaveLoad;
 		public RectTransform scrollContent;
 		public ObjectLayerEntry prefab;
-		private SerializableDictionary<string, bool> layerMap;
-		private Dictionary<string, ObjectLayerEntry> entryMap;
+		private SerializableDictionary<string, bool> layerMap = new SerializableDictionary<string, bool> ();
+		private Dictionary<string, ObjectLayerEntry> entryMap = new Dictionary<string, ObjectLayerEntry> ();
 		public string folder = "ObjectLayer";
 		public string file = "LayerSettings";
 
@@ -22,9 +22,9 @@ namespace ObjectLayer
 		// Use this for initialization
 		void Awake ()
 		{
-			dict = new SerializableDictionary<string, List<LayeredObject>> ();
-			layerMap = new SerializableDictionary<string, bool> ();
-			entryMap = new Dictionary<string, ObjectLayerEntry> ();
+//			dict = new SerializableDictionary<string, List<LayeredObject>> ();
+//			layerMap = new SerializableDictionary<string, bool> ();
+//			entryMap = new Dictionary<string, ObjectLayerEntry> ();
 
 			dataSaveLoad.AddHandler(DataLoadCallback, typeof(SerializableDictionary<string, bool>));
 
@@ -44,6 +44,7 @@ namespace ObjectLayer
 		public void AddObject (LayeredObject lo)
 		{
 			string name = lo.layerName;
+			print (name + ":" + lo.name);
 			if (!dict.ContainsKey (name)) {
 				dict.Add (name, new List<LayeredObject> ());
 
@@ -52,19 +53,27 @@ namespace ObjectLayer
 				cde.Set (name, this);
 				cde.toggle.isOn = lo.visible;
 
-				if(entryMap.ContainsKey(name)){
+				if(entryMap.ContainsKey(name)) {
 					entryMap[name] = cde;
-				}else{
+				} else {
 					entryMap.Add (name, cde);
 				}
 				
-				if(layerMap.ContainsKey(name)){
+				if(layerMap.ContainsKey(name)) {
 					layerMap[name] = lo.visible;
-				}else{
+				} else {
 					layerMap.Add (name, lo.visible);
 				}
 			}
-			dict [name].Add (lo);
+			if(!dict[name].Contains(lo)){
+				dict [name].Add (lo);
+			}
+
+			if(layerMap.ContainsKey(name)) {
+				lo.visible = layerMap [name];
+				entryMap [name].toggle.isOn = lo.visible;
+			}
+
 		}
 
 		public void RemoveObject(LayeredObject lo){
@@ -97,39 +106,33 @@ namespace ObjectLayer
 				}
 			}
 			layerMap [layer] = v;
-
-//			dataSaveLoad.saveDataUI.fileName.text = file;
-//			dataSaveLoad.saveDataUI.data = layerMap;
-//			dataSaveLoad.saveDataUI.Approved (true, folder);
-			dataSaveLoad.Save (file, folder, layerMap);
-
 		}
 
 		public void DataLoadCallback (object o)
 		{
 			SerializableDictionary<string, bool> data = o as SerializableDictionary<string, bool>;
+			foreach (string k in data.Keys){
+				if(layerMap.ContainsKey(k))
+					layerMap[k] = data[k];
+				else
+					layerMap.Add (k, data[k]);
+			}
+
 			foreach (string key in data.Keys) {
+				print (key+":"+data[key]);
 				SetLayerVisible (data [key], key);
-				entryMap [key].toggle.isOn = data [key];
+				if(entryMap.ContainsKey(key))
+					entryMap [key].toggle.isOn = data [key];
 
 			}
 		}
 
-		public void ShowSaveUI ()
-		{
-			
-//			dataSaveLoad.ShowSaveDialog ( null );
-		}
-		
-		public void ShowLoadUI ()
-		{
-//			dataSaveLoad.ShowLoadDialog (typeof(List<Point>));
-		}
-		
-		// Update is called once per frame
-		void Update ()
-		{
-		
+//		void OnDisabled(){
+//			dataSaveLoad.Save (file, folder, layerMap);
+//		}
+
+		void OnDestroy(){
+			dataSaveLoad.Save (file, folder, layerMap);
 		}
 	}
 
