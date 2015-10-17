@@ -142,11 +142,11 @@ Prefab:
       objectReference: {fileID: 346150290}
     - target: {fileID: 22420378, guid: c58ffb78ca7134e6b835000bf452f1ad, type: 2}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22420378, guid: c58ffb78ca7134e6b835000bf452f1ad, type: 2}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 22410884, guid: c58ffb78ca7134e6b835000bf452f1ad, type: 2}
       propertyPath: m_SizeDelta.y
