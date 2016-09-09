@@ -131,7 +131,7 @@ namespace ObjectLayer
 //			dataSaveLoad.Save (file, folder, layerMap);
 //		}
 
-		void OnDestroy(){
+		void OnDisable(){
 			dataSaveLoad.Save (file, folder, layerMap);
 		}
 	}
