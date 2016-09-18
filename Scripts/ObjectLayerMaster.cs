@@ -44,7 +44,7 @@ namespace ObjectLayer
 		public void AddObject (LayeredObject lo)
 		{
 			string name = lo.layerName;
-			print (name + ":" + lo.name);
+//			print (name + ":" + lo.name);
 			if (!dict.ContainsKey (name)) {
 				dict.Add (name, new List<LayeredObject> ());
 
@@ -127,9 +127,6 @@ namespace ObjectLayer
 			}
 		}
 
-//		void OnDisabled(){
-//			dataSaveLoad.Save (file, folder, layerMap);
-//		}
 
 		void OnDisable(){
 			dataSaveLoad.Save (file, folder, layerMap);
