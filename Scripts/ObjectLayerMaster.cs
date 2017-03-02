@@ -83,6 +83,10 @@ namespace ObjectLayer
 			}
 		}
 
+		public bool IsLayerVisible(string layer){
+			return layerMap [layer];
+		}
+
 		public void SetLayerVisible (string layer)
 		{
 			SetLayerVisible (true, layer);
