@@ -3,7 +3,7 @@ using System.Collections;
 
 namespace ObjectLayer {
 	public class LayeredObject : MonoBehaviour {
-
+		
 		public string layerName;
 
 		private ObjectLayerMaster master;
