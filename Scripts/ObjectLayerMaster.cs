@@ -69,6 +69,10 @@ namespace ObjectLayer
 			}
 		}
 
+		void Reset(){
+			dataSaveLoad = FindObjectOfType<DataSaveLoadMaster> ();
+		}
+
 
 		private bool isInit = false;
 		public void AddObject (LayeredObject lo)
@@ -96,11 +100,13 @@ namespace ObjectLayer
 				}
 
 				foreach (string n in entryMap.Keys) {
-					LayerDefinition ld = parentMap [ldMap [n]];
-					if (ld != null) {
-						if(entryMap.ContainsKey(ld.name)){
-							ObjectLayerEntry p = entryMap [ld.name];
-							p.AddChild(entryMap[n]);
+					if (ldMap.ContainsKey (n) && parentMap.ContainsKey (ldMap [n])) {
+						LayerDefinition ld = parentMap [ldMap [n]];
+						if (ld != null) {
+							if (entryMap.ContainsKey (ld.name)) {
+								ObjectLayerEntry p = entryMap [ld.name];
+								p.AddChild (entryMap [n]);
+							}
 						}
 					}
 				}
